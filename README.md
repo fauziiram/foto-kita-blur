@@ -1,5 +1,7 @@
 # Foto Kita Blur
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/fauziiram/foto-kita-blur)
+
 Aplikasi web interaktif bertenaga AI lokal untuk mendeteksi pose tangan dan menyensor (blur) feed kamera secara real-time. Aplikasi ini dibangun menggunakan React, TypeScript, Vite, Tailwind CSS, dan Google MediaPipe Hand Landmarker.
 
 ## Fitur Utama

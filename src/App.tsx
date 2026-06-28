@@ -1,6 +1,6 @@
 import React from "react";
 import CameraTracker from "./components/CameraTracker";
-import { Sparkles, HelpCircle, Activity, Camera } from "lucide-react";
+import { Sparkles, HelpCircle, Activity, Camera, Github } from "lucide-react";
 
 export default function App() {
   return (
@@ -23,6 +23,16 @@ export default function App() {
 
         {/* TOP STATUS HUB */}
         <div className="flex items-center gap-4 md:gap-6">
+          <a
+            href="https://github.com/fauziiram/foto-kita-blur"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-slate-600 text-xs font-medium text-slate-300 hover:text-white transition-all shadow-sm"
+          >
+            <Github className="w-4 h-4" />
+            <span className="hidden sm:inline">GitHub Repository</span>
+          </a>
+          <div className="h-6 w-px bg-slate-800"></div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
             <span className="text-xs font-mono uppercase text-slate-400">Sistem Aktif</span>

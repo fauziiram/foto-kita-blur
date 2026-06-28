@@ -3,6 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fauziiram/foto-kita-blur.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fauziiram/foto-kita-blur/issues"
+  },
+  "homepage": "https://github.com/fauziiram/foto-kita-blur#readme",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
