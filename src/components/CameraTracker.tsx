@@ -526,7 +526,7 @@ export default function CameraTracker() {
         {/* VIEWPORT BOX */}
         <div 
           id="webcam_stage_card" 
-          className="relative bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl aspect-video w-full flex items-center justify-center group"
+          className="relative bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl aspect-video w-full flex items-center justify-center group min-h-[240px] sm:min-h-0"
         >
           {/* MIRRORED LIVE FEED VIDEO & OVERLAY CANVAS */}
           <video
@@ -558,28 +558,28 @@ export default function CameraTracker() {
 
           {/* INITIAL/OFF CAMERA PLACEHOLDER */}
           {!isCameraActive && (
-            <div id="camera_disabled_placeholder" className="flex flex-col items-center justify-center p-8 z-20 text-center select-none animate-fade-in">
-              <div className="w-16 h-16 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center text-slate-400 mb-4 group-hover:scale-105 transition-transform duration-300 shadow-xl">
-                <Camera className="w-8 h-8 text-indigo-500" />
+            <div id="camera_disabled_placeholder" className="flex flex-col items-center justify-center p-4 sm:p-8 z-20 text-center select-none animate-fade-in">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-800 flex items-center justify-center text-slate-400 mb-3 sm:mb-4 group-hover:scale-105 transition-transform duration-300 shadow-xl">
+                <Camera className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-500" />
               </div>
-              <h3 className="text-base font-display font-semibold text-white mb-2">Kamera Offline</h3>
-              <p className="text-xs text-slate-500 max-w-sm mb-6 leading-relaxed">
+              <h3 className="text-sm sm:text-base font-display font-semibold text-white mb-1 sm:mb-2">Kamera Offline</h3>
+              <p className="text-[10px] sm:text-xs text-slate-500 max-w-xs sm:max-w-sm mb-4 sm:mb-6 leading-relaxed hidden sm:block">
                 Tekan tombol di bawah untuk menyalakan kamera. Semua pemrosesan citra berjalan lokal pada CPU/GPU browser Anda.
               </p>
               <button
                 id="btn_activate_camera_large"
                 onClick={startCamera}
                 disabled={isModelLoading}
-                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-900 disabled:text-slate-600 text-white font-medium text-xs rounded-xl shadow-lg hover:shadow-indigo-500/10 active:scale-95 transition-all duration-150 flex items-center gap-2"
+                className="px-4 py-2 sm:px-5 sm:py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-900 disabled:text-slate-600 text-white font-medium text-[11px] sm:text-xs rounded-xl shadow-lg hover:shadow-indigo-500/10 active:scale-95 transition-all duration-150 flex items-center gap-2"
               >
                 {isModelLoading ? (
                   <>
-                    <RefreshCw className="w-4 h-4 animate-spin text-indigo-400" />
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-indigo-400" />
                     Memproses Engine AI...
                   </>
                 ) : (
                   <>
-                    <Camera className="w-4 h-4" />
+                    <Camera className="w-3.5 h-3.5" />
                     Hubungkan Kamera
                   </>
                 )}
