@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import CameraTracker from "./components/CameraTracker";
 import { Sparkles, HelpCircle, Activity, Camera, Github } from "lucide-react";
 
 export default function App() {
+  const [isGuideOpen, setIsGuideOpen] = useState(true);
   return (
     <div id="app_root_container" className="min-h-screen bg-[#0A0C10] text-slate-300 font-sans flex flex-col justify-between">
       
-      {/* HEADER SECTION (h-14, matching GESTURE_CAM PRO layout style) */}
-      <header id="main_header" className="h-16 border-b border-slate-800 bg-[#0F1218] flex items-center justify-between px-6 shrink-0 relative z-20">
+      {/* HEADER SECTION (h-14 on mobile, h-16 on desktop) */}
+      <header id="main_header" className="h-14 sm:h-16 border-b border-slate-800 bg-[#0F1218] flex items-center justify-between px-4 sm:px-6 shrink-0 relative z-20">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center shadow-lg shadow-indigo-600/20">
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,7 +16,7 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <span className="font-bold tracking-tight text-white font-display text-base">
+            <span className="font-bold tracking-tight text-white font-display text-sm sm:text-base">
               FOTO KITA <span className="text-indigo-500">BLUR</span>
             </span>
           </div>
@@ -45,47 +46,59 @@ export default function App() {
       </header>
 
       {/* MAIN BODY AREA */}
-      <main id="main_dashboard_body" className="relative z-10 w-full flex-1 flex flex-col overflow-hidden">
+      <main id="main_dashboard_body" className="relative z-10 w-full flex-1 flex flex-col lg:overflow-hidden">
         
-        {/* INSTRUCTIONS STEP CARD */}
-        <section id="onboarding_guide" className="bg-[#0F1218]/90 border-b border-slate-800 px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-          <div className="md:col-span-1 flex items-start gap-3">
-            <HelpCircle className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
-            <div>
-              <h2 className="font-display font-semibold text-white text-sm">Cara Penggunaan</h2>
-              <p className="text-[11px] text-slate-500 mt-0.5">Panduan interaktif pose hand-tracking:</p>
+        {/* COLLAPSIBLE INSTRUCTIONS STEP CARD */}
+        <section id="onboarding_guide" className="bg-[#0F1218]/90 border-b border-slate-800 transition-all duration-300">
+          <div 
+            className="px-4 py-3 sm:px-6 flex items-center justify-between cursor-pointer select-none" 
+            onClick={() => setIsGuideOpen(!isGuideOpen)}
+          >
+            <div className="flex items-center gap-3">
+              <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 shrink-0" />
+              <div>
+                <h2 className="font-display font-semibold text-white text-xs sm:text-sm">Cara Penggunaan</h2>
+                <p className="text-[10px] sm:text-[11px] text-slate-500">Panduan interaktif pose hand-tracking (klik untuk detail)</p>
+              </div>
             </div>
+            <button className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+              <svg className={`w-4 h-4 transform transition-transform duration-200 ${isGuideOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
 
-          <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Step 1 */}
-            <div id="step_1" className="bg-slate-950/40 border border-slate-800/60 px-4 py-2 rounded-xl flex gap-3 items-center">
-              <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[10px] font-mono font-bold text-indigo-400 shrink-0">
-                1
-              </span>
-              <p className="text-[11px] text-slate-400 leading-tight">Nyalakan kamera & izinkan akses webcam.</p>
-            </div>
+          {isGuideOpen && (
+            <div className="px-4 pb-4 sm:px-6 sm:pb-4 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 animate-fade-in">
+              {/* Step 1 */}
+              <div id="step_1" className="bg-slate-950/40 border border-slate-800/60 px-4 py-2 rounded-xl flex gap-3 items-center">
+                <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[10px] font-mono font-bold text-indigo-400 shrink-0">
+                  1
+                </span>
+                <p className="text-[11px] text-slate-400 leading-tight font-sans">Nyalakan kamera & izinkan akses webcam.</p>
+              </div>
 
-            {/* Step 2 */}
-            <div id="step_2" className="bg-slate-950/40 border border-slate-800/60 px-4 py-2 rounded-xl flex gap-3 items-center">
-              <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[10px] font-mono font-bold text-indigo-400 shrink-0">
-                2
-              </span>
-              <p className="text-[11px] text-slate-400 leading-tight">Buat pose Peace Sign (✌️) di depan kamera.</p>
-            </div>
+              {/* Step 2 */}
+              <div id="step_2" className="bg-slate-950/40 border border-slate-800/60 px-4 py-2 rounded-xl flex gap-3 items-center">
+                <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[10px] font-mono font-bold text-indigo-400 shrink-0">
+                  2
+                </span>
+                <p className="text-[11px] text-slate-400 leading-tight font-sans">Buat pose Peace Sign (✌️) di depan kamera.</p>
+              </div>
 
-            {/* Step 3 */}
-            <div id="step_3" className="bg-slate-950/40 border border-slate-800/60 px-4 py-2 rounded-xl flex gap-3 items-center">
-              <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[10px] font-mono font-bold text-indigo-400 shrink-0">
-                3
-              </span>
-              <p className="text-[11px] text-slate-400 leading-tight">Feed kamera otomatis menjadi buram/blur.</p>
+              {/* Step 3 */}
+              <div id="step_3" className="bg-slate-950/40 border border-slate-800/60 px-4 py-2 rounded-xl flex gap-3 items-center">
+                <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[10px] font-mono font-bold text-indigo-400 shrink-0">
+                  3
+                </span>
+                <p className="text-[11px] text-slate-400 leading-tight font-sans">Feed kamera otomatis menjadi buram/blur.</p>
+              </div>
             </div>
-          </div>
+          )}
         </section>
 
         {/* CAMERA WORKSPACE */}
-        <section id="camera_tracking_workspace" className="w-full flex-1">
+        <section id="camera_tracking_workspace" className="w-full flex-1 flex flex-col">
           <CameraTracker />
         </section>
 

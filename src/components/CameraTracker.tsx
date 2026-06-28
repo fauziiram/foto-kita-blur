@@ -430,10 +430,10 @@ export default function CameraTracker() {
   };
 
   return (
-    <div id="camera_tracker_app" className="flex flex-col lg:flex-row flex-1 w-full bg-[#0A0C10] overflow-hidden">
+    <div id="camera_tracker_app" className="flex flex-col lg:flex-row flex-1 w-full bg-[#0A0C10] lg:overflow-hidden">
       
       {/* 1. LEFT SIDEBAR: Tracking modules and triggers */}
-      <aside id="left_sidebar_container" className="w-full lg:w-64 shrink-0 border-b lg:border-b-0 lg:border-r border-slate-800 bg-[#0F1218] p-5 flex flex-col gap-6">
+      <aside id="left_sidebar_container" className="w-full lg:w-64 shrink-0 border-b lg:border-b-0 lg:border-r border-slate-800 bg-[#0F1218] p-4 sm:p-5 order-2 lg:order-1 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-5">
         
         {/* MODULES CONTROL */}
         <div id="tracking_modules_section">
@@ -494,7 +494,7 @@ export default function CameraTracker() {
         </div>
 
         {/* ACTIVE DETECTION STATUS BANNER */}
-        <div id="detection_event_section" className="mt-auto pt-4 border-t border-slate-800/60">
+        <div id="detection_event_section" className="lg:mt-auto mt-0 lg:pt-4 pt-0 lg:border-t border-t-0 border-slate-800/60 flex flex-col justify-center">
           {activeBlur ? (
             <div id="status_event_alert_active" className="bg-red-950/20 border border-red-900/40 p-4 rounded-xl animate-fade-in">
               <div className="text-[10px] text-red-400 uppercase font-bold mb-1 tracking-wider flex items-center gap-1.5 font-mono">
@@ -521,7 +521,7 @@ export default function CameraTracker() {
       </aside>
 
       {/* 2. MIDDLE VIEWPORT: Main camera workspace */}
-      <main id="middle_viewport_container" className="flex-1 bg-black/40 p-6 flex flex-col gap-6 overflow-y-auto">
+      <main id="middle_viewport_container" className="flex-1 bg-black/40 p-4 sm:p-6 flex flex-col gap-6 order-1 lg:order-2 lg:overflow-y-auto overflow-y-visible">
         
         {/* VIEWPORT BOX */}
         <div 
@@ -628,13 +628,13 @@ export default function CameraTracker() {
 
         {/* QUICK CONTROL ACTIONS BAR */}
         {isCameraActive && (
-          <div id="quick_controls_panel" className="bg-[#0F1218] border border-slate-800/80 p-4 rounded-xl flex flex-wrap gap-4 items-center justify-between shadow-lg">
-            <div className="flex items-center gap-3">
+          <div id="quick_controls_panel" className="bg-[#0F1218] border border-slate-800/80 p-4 rounded-xl flex flex-col sm:flex-row gap-4 items-center justify-between shadow-lg">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               <button
                 id="btn_take_photo"
                 onClick={takeSnapshot}
                 disabled={countdown !== null}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition-all shadow-md flex items-center gap-1.5 active:scale-95 disabled:opacity-50"
+                className="flex-1 sm:flex-none px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 Snapshot (3s)
@@ -647,18 +647,18 @@ export default function CameraTracker() {
                   addLog(`MODULE_TRACKER: SKELETON_${!showSkeleton ? "ON" : "OFF"}`);
                   playSynthesizedSound("click");
                 }}
-                className={`p-2 rounded-lg border text-xs font-medium transition-all flex items-center gap-1.5 ${
+                className={`flex-1 sm:flex-none p-2.5 rounded-lg border text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
                   showSkeleton 
                     ? "bg-[#0A0C10] text-indigo-400 border-indigo-500/20" 
                     : "bg-[#0A0C10] text-slate-500 border-slate-800 hover:text-slate-300"
                 }`}
               >
                 {showSkeleton ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                <span className="hidden sm:inline">Skeleton</span>
+                <span>Skeleton</span>
               </button>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
               {devices.length > 1 && (
                 <div className="flex items-center gap-1.5">
                   <span className="text-[10px] font-medium text-slate-500 font-mono">WEBCAM:</span>
@@ -666,7 +666,7 @@ export default function CameraTracker() {
                     id="camera_device_select"
                     value={selectedDeviceId}
                     onChange={(e) => handleDeviceChange(e.target.value)}
-                    className="bg-slate-950 text-[10px] text-slate-300 border border-slate-800 rounded-lg py-1 px-2 focus:outline-none focus:border-indigo-500 max-w-[130px] font-mono"
+                    className="bg-slate-950 text-[10px] text-slate-300 border border-slate-800 rounded-lg py-1.5 px-2 focus:outline-none focus:border-indigo-500 max-w-[130px] font-mono"
                   >
                     {devices.map((device) => (
                       <option key={device.deviceId} value={device.deviceId}>
@@ -680,7 +680,7 @@ export default function CameraTracker() {
               <button
                 id="btn_deactivate_camera"
                 onClick={stopCamera}
-                className="px-3.5 py-1.5 bg-rose-950/20 hover:bg-rose-950/40 text-rose-400 border border-rose-900/40 rounded-lg text-xs font-medium transition-all"
+                className="flex-1 sm:flex-none px-3.5 py-2 bg-rose-950/20 hover:bg-rose-950/40 text-rose-400 border border-rose-900/40 rounded-lg text-xs font-medium transition-all"
               >
                 Matikan
               </button>
@@ -729,25 +729,28 @@ export default function CameraTracker() {
                 >
                   <img src={photo} alt={`Snapshot ${index}`} className="w-full h-full object-cover" />
                   
-                  {/* Action overlays on hover */}
-                  <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex items-center justify-center gap-2.5">
-                    <a
-                      id={`btn_download_photo_${index}`}
-                      href={photo}
-                      download={`peace-blur-snapshot-${index}.png`}
-                      className="p-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded transition-transform hover:scale-105"
-                      title="Unduh Gambar"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                    </a>
-                    <button
-                      id={`btn_delete_photo_${index}`}
-                      onClick={() => deletePhoto(index)}
-                      className="p-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded transition-transform hover:scale-105"
-                      title="Hapus Gambar"
-                    >
-                      <Trash className="w-3.5 h-3.5" />
-                    </button>
+                  {/* Action overlays (always visible on mobile touch screen, hover triggered on desktop) */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-slate-950/90 border-t border-slate-800/80 px-3 py-2 flex items-center justify-between opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200">
+                    <span className="text-[10px] font-mono text-slate-500">#{index + 1}</span>
+                    <div className="flex gap-2">
+                      <a
+                        id={`btn_download_photo_${index}`}
+                        href={photo}
+                        download={`peace-blur-snapshot-${index}.png`}
+                        className="p-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded transition-all active:scale-90"
+                        title="Unduh Gambar"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                      </a>
+                      <button
+                        id={`btn_delete_photo_${index}`}
+                        onClick={() => deletePhoto(index)}
+                        className="p-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded transition-all active:scale-90"
+                        title="Hapus Gambar"
+                      >
+                        <Trash className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -758,10 +761,10 @@ export default function CameraTracker() {
       </main>
 
       {/* 3. RIGHT PANEL: Live logs console & biomechanics analytics */}
-      <aside id="right_sidebar_container" className="w-full lg:w-72 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-800 bg-[#0F1218] p-5 flex flex-col gap-6 overflow-y-auto">
+      <aside id="right_sidebar_container" className="w-full lg:w-72 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-800 bg-[#0F1218] p-4 sm:p-5 order-3 lg:order-3 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-6 lg:overflow-y-auto overflow-y-visible">
         
         {/* SENSITIVITY CONFIG */}
-        <div id="tracking_settings_section" className="pb-4 border-b border-slate-800/60">
+        <div id="tracking_settings_section" className="lg:pb-4 pb-0 lg:border-b border-b-0 border-slate-800/60">
           <div className="flex items-center gap-1.5 text-slate-400 mb-3">
             <Sliders className="w-4 h-4 text-indigo-400" />
             <h3 className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold font-mono">
@@ -824,7 +827,7 @@ export default function CameraTracker() {
         </div>
 
         {/* BIOMECHANICS METRICS PROGRESS BARS */}
-        <div id="joint_confidence_section" className="pt-4 border-t border-slate-800/60">
+        <div id="joint_confidence_section" className="lg:pt-4 pt-0 lg:border-t border-t-0 border-slate-800/60">
           <h3 className="text-[10px] uppercase tracking-widest text-slate-500 mb-3.5 font-semibold font-mono">
             Joint Confidence
           </h3>
