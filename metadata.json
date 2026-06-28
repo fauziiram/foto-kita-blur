@@ -1,0 +1,6 @@
+{
+  "name": "Kamera Pose Blur",
+  "description": "Kamera interaktif yang mendeteksi pose tangan. Ketika pose peace sign (V-sign) terdeteksi, tampilan kamera otomatis menjadi buram (blur).",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
