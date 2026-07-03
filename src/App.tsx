@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CameraTracker from "./components/CameraTracker";
-import { Sparkles, HelpCircle, Activity, Camera, Github } from "lucide-react";
+import { Sparkles, HelpCircle, Activity, Camera, Github, Linkedin } from "lucide-react";
 
 export default function App() {
   const [isGuideOpen, setIsGuideOpen] = useState(true);
@@ -105,13 +105,35 @@ export default function App() {
       </main>
 
       {/* FOOTER STATUS BAR */}
-      <footer id="main_footer" className="h-8 bg-indigo-600 px-6 flex items-center justify-between text-white text-[10px] font-medium shrink-0 relative z-20">
-        <div className="flex gap-4">
+      <footer id="main_footer" className="h-9 bg-[#0F1218] border-t border-slate-800/80 px-4 sm:px-6 flex items-center justify-between text-slate-400 text-[10px] font-mono shrink-0 relative z-20">
+        <div className="flex gap-3 sm:gap-4 items-center">
           <span>SOURCE: WEBCAM_HD_CAPTURE</span>
-          <span className="hidden sm:inline">|</span>
-          <span>100% PROSES LOKAL (PRIVASI AMAN)</span>
+          <span className="text-slate-800">|</span>
+          <span>PRIVASI 100% LOKAL</span>
         </div>
-        <div>FOTO KITA BLUR v1.0.0 ACTIVATED</div>
+        
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline text-slate-500">Dibuat oleh:</span>
+          <a
+            href="https://github.com/fauzirammm"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-slate-400 hover:text-white transition-colors font-sans"
+          >
+            <Github className="w-3 h-3" />
+            <span>@fauzirammm</span>
+          </a>
+          <span className="text-slate-700 font-sans">|</span>
+          <a
+            href="https://www.linkedin.com/in/fauzi-ramdani-747978249/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-slate-400 hover:text-indigo-400 transition-colors font-sans"
+          >
+            <Linkedin className="w-3 h-3 text-indigo-500" />
+            <span>LinkedIn</span>
+          </a>
+        </div>
       </footer>
 
     </div>

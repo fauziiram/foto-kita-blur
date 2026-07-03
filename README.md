@@ -8,6 +8,7 @@ Aplikasi web interaktif bertenaga AI lokal untuk mendeteksi pose tangan dan meny
 
 - **Deteksi Pose Real-Time**: Menggunakan model AI MediaPipe Hand Landmarker untuk mengenali pose tangan langsung dari webcam.
 - **Auto-Blur Otomatis**: Sensor buram (blur) secara otomatis diaktifkan pada video feed ketika mendeteksi pose "Peace" (✌️).
+- **Mode Layar Penuh (Full Screen)**: Mode imersif layar penuh dengan HUD kontrol melayang (shutter, slider intensitas blur, toggle skeleton, dll.) untuk pengalaman pengambilan foto yang lebih interaktif.
 - **100% Proses Lokal (Privacy-Friendly)**: Semua proses pengolahan gambar dan inferensi AI dijalankan sepenuhnya di dalam browser pengguna. Tidak ada data video atau gambar yang dikirim ke server luar.
 - **Galeri Snapshot**: Ambil foto hasil sensor blur dan simpan di galeri lokal proyek Anda.
 
@@ -53,3 +54,10 @@ Sebelum menjalankan aplikasi, pastikan Anda memiliki perangkat lunak berikut yan
 - **Build Tool**: Vite
 - **AI Engine**: `@mediapipe/tasks-vision` (Hand Landmarker)
 - **Icons**: Lucide React
+
+## Pembuat Aplikasi
+
+Aplikasi ini dikembangkan oleh:
+- **Fauzi Ramdani**
+  - GitHub: [@fauzirammm](https://github.com/fauzirammm)
+  - LinkedIn: [Fauzi Ramdani](https://www.linkedin.com/in/fauzi-ramdani-747978249/)

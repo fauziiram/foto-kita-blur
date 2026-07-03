@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
-import { Camera, RefreshCw, Eye, EyeOff, Sparkles, Image as ImageIcon, Download, Trash, Check, X, ShieldAlert, Sliders, Volume2, VolumeX, Terminal, Shield, Code, ChevronRight } from "lucide-react";
+import { Camera, RefreshCw, Eye, EyeOff, Sparkles, Image as ImageIcon, Download, Trash, Check, X, ShieldAlert, Sliders, Volume2, VolumeX, Terminal, Shield, Code, ChevronRight, Maximize, Minimize2 } from "lucide-react";
 import { detectPeaceSign, GestureResult, Landmark } from "../utils/handDetection";
 
 // Define the hand connection paths for drawing the skeleton
@@ -27,6 +27,7 @@ export default function CameraTracker() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Settings States
   const [blurIntensity, setBlurIntensity] = useState<number>(24);
@@ -209,6 +210,63 @@ export default function CameraTracker() {
       setTimeout(() => playSynthesizedSound("success"), 50);
     }
   };
+
+  // Fullscreen Handlers
+  const toggleFullscreen = async () => {
+    const container = document.getElementById("webcam_stage_card");
+    if (!container) return;
+
+    try {
+      if (!document.fullscreenElement) {
+        if (container.requestFullscreen) {
+          await container.requestFullscreen();
+        } else if ((container as any).webkitRequestFullscreen) {
+          await (container as any).webkitRequestFullscreen();
+        } else if ((container as any).mozRequestFullScreen) {
+          await (container as any).mozRequestFullScreen();
+        } else if ((container as any).msRequestFullscreen) {
+          await (container as any).msRequestFullscreen();
+        }
+        setIsFullscreen(true);
+        addLog("SYSTEM_UI: FULLSCREEN_ON");
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          await (document as any).webkitExitFullscreen();
+        } else if ((document as any).mozCancelFullScreen) {
+          await (document as any).mozCancelFullScreen();
+        } else if ((document as any).msExitFullscreen) {
+          await (document as any).msExitFullscreen();
+        }
+        setIsFullscreen(false);
+        addLog("SYSTEM_UI: FULLSCREEN_OFF");
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle failed", err);
+      addLog("ERROR: FULLSCREEN_TOGGLE_FAILED");
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = !!document.fullscreenElement;
+      setIsFullscreen(isCurrentlyFullscreen);
+      addLog(`SYSTEM_UI: FULLSCREEN_${isCurrentlyFullscreen ? "ON" : "OFF"}`);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+    };
+  }, []);
 
   // Detection loop
   useEffect(() => {
@@ -526,7 +584,11 @@ export default function CameraTracker() {
         {/* VIEWPORT BOX */}
         <div 
           id="webcam_stage_card" 
-          className="relative bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl aspect-video w-full flex items-center justify-center group min-h-[240px] sm:min-h-0"
+          className={`relative bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl w-full flex items-center justify-center group transition-all duration-300 ${
+            isFullscreen 
+              ? "h-full rounded-none border-none" 
+              : "aspect-video min-h-[240px] sm:min-h-0"
+          }`}
         >
           {/* MIRRORED LIVE FEED VIDEO & OVERLAY CANVAS */}
           <video
@@ -590,9 +652,22 @@ export default function CameraTracker() {
           {/* WEBCAM HUD OVERLAYS (When active) */}
           {isCameraActive && (
             <>
+              {/* ENTER FULLSCREEN BUTTON (Hover overlay) */}
+              {!isFullscreen && (
+                <button
+                  id="btn_enter_fullscreen_hud"
+                  onClick={toggleFullscreen}
+                  className="absolute top-4 right-4 z-20 p-2.5 bg-slate-900/80 hover:bg-indigo-600 border border-slate-800 text-slate-300 hover:text-white rounded-xl transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-lg flex items-center gap-1.5 text-xs font-semibold cursor-pointer pointer-events-auto"
+                  title="Fullscreen Mode"
+                >
+                  <Maximize className="w-4 h-4" />
+                  <span className="hidden sm:inline">Full Screen</span>
+                </button>
+              )}
+
               {/* COUNTDOWN TIMER */}
               {countdown !== null && (
-                <div id="snapshot_countdown_hud" className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-30">
+                <div id="snapshot_countdown_hud" className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-40 animate-fade-in">
                   <span className="text-7xl font-display font-black text-amber-400 animate-ping">
                     {countdown}
                   </span>
@@ -621,6 +696,129 @@ export default function CameraTracker() {
                 <div className="border-l-2 border-b-2 border-white/40 w-6 h-6" />
                 <span className="text-white/40 text-[9px] font-mono">REC [●] LIVE</span>
                 <div className="border-r-2 border-b-2 border-white/40 w-6 h-6" />
+              </div>
+            </>
+          )}
+
+          {/* FULLSCREEN HUD OVERLAYS */}
+          {isFullscreen && (
+            <>
+              {/* Floating Top Controls Header */}
+              <div 
+                id="fullscreen_hud_header" 
+                className="absolute top-4 left-4 right-4 flex items-center justify-between z-30 pointer-events-auto bg-[#0F1218]/80 backdrop-blur-md border border-slate-800/80 px-4 py-3 rounded-2xl shadow-xl transition-all duration-300"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-white tracking-tight text-xs sm:text-sm font-display flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
+                    PEACE BLUR CAMERA
+                  </span>
+                  <div className="h-4 w-px bg-slate-800 hidden sm:block" />
+                  <span className="text-[10px] text-slate-400 font-mono hidden sm:inline-block">
+                    {activeBlur ? "✌️ PATTERN DETECTED" : "AWAITING GESTURE"}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {/* Webcam selector inside fullscreen */}
+                  {devices.length > 1 && (
+                    <select
+                      id="fullscreen_camera_select"
+                      value={selectedDeviceId}
+                      onChange={(e) => handleDeviceChange(e.target.value)}
+                      className="bg-slate-950 text-[10px] text-slate-300 border border-slate-800 rounded-lg py-1.5 px-2 focus:outline-none focus:border-indigo-500 font-mono"
+                    >
+                      {devices.map((device) => (
+                        <option key={device.deviceId} value={device.deviceId}>
+                          {device.label || `CAM_${devices.indexOf(device) + 1}`}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  {/* Exit Fullscreen button */}
+                  <button
+                    id="btn_exit_fullscreen"
+                    onClick={toggleFullscreen}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-950/40 hover:bg-rose-600 border border-rose-900/40 hover:border-rose-500 text-rose-400 hover:text-white rounded-xl text-xs font-semibold transition-all cursor-pointer active:scale-95 shadow-lg"
+                  >
+                    <Minimize2 className="w-3.5 h-3.5" />
+                    <span>Exit Full Screen</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Floating Right Intensity Slider */}
+              <div 
+                id="fullscreen_hud_slider" 
+                className="absolute right-4 top-24 bottom-24 flex flex-col items-center justify-center z-30 pointer-events-auto bg-[#0F1218]/80 backdrop-blur-md border border-slate-800/80 p-4 rounded-2xl shadow-xl w-14"
+              >
+                <span className="text-[9px] font-bold font-mono text-indigo-400 rotate-90 origin-center whitespace-nowrap mb-10 mt-2">
+                  BLUR RADIUS: {blurIntensity}px
+                </span>
+                <div className="flex-1 flex items-center justify-center h-full my-4 relative">
+                  <input
+                    id="fullscreen_blur_slider"
+                    type="range"
+                    min="4"
+                    max="60"
+                    value={blurIntensity}
+                    onChange={(e) => setBlurIntensity(Number(e.target.value))}
+                    style={{ writingMode: "vertical-lr", direction: "rtl" }}
+                    className="accent-indigo-500 cursor-pointer w-2 h-full bg-slate-950 rounded-lg appearance-none"
+                  />
+                </div>
+              </div>
+
+              {/* Floating Bottom Shutter Controls Panel */}
+              <div 
+                id="fullscreen_hud_controls" 
+                className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 z-30 pointer-events-auto"
+              >
+                {/* Skeleton Toggle Button */}
+                <button
+                  id="btn_fullscreen_skeleton"
+                  onClick={() => {
+                    setShowSkeleton(!showSkeleton);
+                    addLog(`MODULE_TRACKER: SKELETON_${!showSkeleton ? "ON" : "OFF"}`);
+                    playSynthesizedSound("click");
+                  }}
+                  className={`p-3.5 rounded-full border backdrop-blur-md transition-all active:scale-90 shadow-lg cursor-pointer ${
+                    showSkeleton 
+                      ? "bg-indigo-600/80 text-white border-indigo-500/30" 
+                      : "bg-[#0F1218]/80 text-slate-400 border-slate-800 hover:text-slate-200"
+                  }`}
+                  title="Toggle Skeleton Overlay"
+                >
+                  {showSkeleton ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                </button>
+
+                {/* Shutter Capture Button */}
+                <button
+                  id="btn_fullscreen_shutter"
+                  onClick={takeSnapshot}
+                  disabled={countdown !== null || !isCameraActive}
+                  className="w-20 h-20 border-4 border-white/90 rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95 bg-white/10 backdrop-blur-sm shadow-2xl disabled:opacity-40 disabled:pointer-events-none"
+                  title="Snap Photo (3s countdown)"
+                >
+                  <div className="w-14 h-14 bg-rose-600 hover:bg-rose-500 rounded-full flex items-center justify-center transition-colors">
+                    <Sparkles className="w-6 h-6 text-white animate-pulse" />
+                  </div>
+                </button>
+
+                {/* Sound Toggle Button */}
+                <button
+                  id="btn_fullscreen_sound"
+                  onClick={toggleSound}
+                  className={`p-3.5 rounded-full border backdrop-blur-md transition-all active:scale-90 shadow-lg cursor-pointer ${
+                    isSoundEnabled 
+                      ? "bg-indigo-600/80 text-white border-indigo-500/30" 
+                      : "bg-[#0F1218]/80 text-slate-400 border-slate-800 hover:text-slate-200"
+                  }`}
+                  title="Toggle Audio Feedback"
+                >
+                  {isSoundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+                </button>
               </div>
             </>
           )}
@@ -655,6 +853,15 @@ export default function CameraTracker() {
               >
                 {showSkeleton ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                 <span>Skeleton</span>
+              </button>
+
+              <button
+                id="btn_toggle_fullscreen_quick"
+                onClick={toggleFullscreen}
+                className="flex-1 sm:flex-none p-2.5 rounded-lg border border-slate-800 bg-[#0A0C10] text-slate-500 hover:text-slate-300 hover:border-slate-700 text-xs font-medium transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+              >
+                <Maximize className="w-4 h-4" />
+                <span>Full Screen</span>
               </button>
             </div>
 
